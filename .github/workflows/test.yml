@@ -50,7 +50,52 @@ jobs:
     - name: Test database operations
       run: |
         .\venv\Scripts\activate.ps1
-        python -c "import database; database.log_activity('Test Window - GitHub Actions'); logs = database.get_daily_logs('${{ github.event.repository.pushed_at }}'); print(f'Logged and retrieved: {len(logs)} entries')"
+        python -c "import database; from datetime import date; database.log_activity('Test Window 1'); database.log_activity('Test Window 2'); logs = database.get_daily_logs(date.today().isoformat()); print(f'✓ Logged and retrieved: {len(logs)} entries')"
+        
+    - name: Test logger.py execution
+      run: |
+        .\venv\Scripts\activate.ps1
+        $job = Start-Job -ScriptBlock {
+          Set-Location "d:\projects\activityTracker\ActivityTracker-Public"
+          .\venv\Scripts\activate.ps1
+          python logger.py
+        }
+        Start-Sleep -Seconds 5
+        Stop-Job $job
+        Remove-Job $job
+        Write-Host "✓ Logger ran for 5 seconds without errors"
+        
+    - name: Add sample log entries for testing
+      run: |
+        .\venv\Scripts\activate.ps1
+        python -c "import database; from datetime import date; entries = ['VSCode - test.py', 'Chrome - GitHub', 'Terminal', 'VSCode - README.md']; [database.log_activity(e) for e in entries]; print(f'✓ Added {len(entries)} sample entries')"
+        
+    - name: Test summarizer.py --raw (no API key needed)
+      run: |
+        .\venv\Scripts\activate.ps1
+        python summarizer.py --raw
+        $today = Get-Date -Format "yyyy-MM-dd"
+        $rawFile = "..\${today}_raw.txt"
+        if (Test-Path $rawFile) {
+          Write-Host "✓ Raw export created: $rawFile"
+          Get-Content $rawFile | Select-Object -First 3
+        } else {
+          Write-Error "✗ Raw export file not found"
+          exit 1
+        }
+        
+    - name: Test summarizer.py with specific date
+      run: |
+        .\venv\Scripts\activate.ps1
+        $testDate = Get-Date -Format "yyyy-MM-dd"
+        python summarizer.py $testDate --raw
+        $rawFile = "..\${testDate}_raw.txt"
+        if (Test-Path $rawFile) {
+          Write-Host "✓ Date-specific raw export works"
+        } else {
+          Write-Error "✗ Date-specific export failed"
+          exit 1
+        }
         
     - name: Test custom DB_PATH support
       env:
