@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from google import genai
 import database
 
-load_dotenv()
+load_dotenv(encoding='utf-8-sig')
 
 # We save the notes in the parent directory (dailyNotes)
 OUTPUT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

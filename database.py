@@ -3,7 +3,7 @@ import os
 from datetime import date
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(encoding='utf-8-sig')
 
 # Allow custom DB path via environment variable, default to project directory
 DB_PATH = os.getenv("DB_PATH")
