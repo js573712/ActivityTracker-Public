@@ -50,6 +50,7 @@ jobs:
     - name: Test database operations
       run: |
         .\venv\Scripts\activate.ps1
+<<<<<<< HEAD
         python -c "import database; from datetime import date; database.log_activity('Test Window 1'); database.log_activity('Test Window 2'); logs = database.get_daily_logs(date.today().isoformat()); print(f'✓ Logged and retrieved: {len(logs)} entries')"
         
     - name: Test logger.py execution
@@ -96,6 +97,9 @@ jobs:
           Write-Error "✗ Date-specific export failed"
           exit 1
         }
+=======
+        python -c "import database; from datetime import date; database.log_activity('Test Window - GitHub Actions'); logs = database.get_daily_logs(date.today().isoformat()); print(f'Logged and retrieved: {len(logs)} entries')"
+>>>>>>> 0dd36f6735164df1d5fe7c6b111eee9be1e64795
         
     - name: Test custom DB_PATH support
       env:
