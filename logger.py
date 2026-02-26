@@ -6,11 +6,16 @@ Note that analyzing screen grabs might be token-intensive for LLMs, but there co
 """
 
 import time
+import os
 import win32gui  # type: ignore
 import database  # type: ignore
 from datetime import datetime
+from dotenv import load_dotenv
 
-POLL_INTERVAL_SECONDS = 60
+load_dotenv(encoding='utf-8-sig')
+
+# Configurable polling interval (in seconds) - set POLL_INTERVAL_SECONDS in .env to override
+POLL_INTERVAL_SECONDS = int(os.getenv("POLL_INTERVAL_SECONDS", "60"))
 
 def get_active_window_title():
     try:

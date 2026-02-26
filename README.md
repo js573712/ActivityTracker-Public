@@ -49,15 +49,23 @@ pip install -r requirements.txt
 ```
 
 #### 4. Configure Environment Variables
-Create a file named `.env` in the root directory and add your Google Gemini API key:
+Create a file named `.env` in the root directory with your settings:
 ```env
+# Required: Your Google Gemini API key
 GOOGLE_API_KEY=your_gemini_api_key_here
-```
 
-**Optional:** Customize where the database is saved:
-```env
+# Optional: How often to check for window changes (default: 60 seconds)
+POLL_INTERVAL_SECONDS=60
+
+# Optional: Custom database location (default: project directory)
 DB_PATH=D:\Documents\ActivityLogs\activity.db
 ```
+
+**Configuration Options:**
+- `GOOGLE_API_KEY` (required) - Get this from [Google AI Studio](https://aistudio.google.com/apikey)
+- `POLL_INTERVAL_SECONDS` (optional) - How many seconds between activity checks. Smaller = more frequent logging & larger DB. Default: 60
+- `DB_PATH` (optional) - Save database to a cloud-synced folder or external drive. Default: project directory as `activity.db`
+
 If not specified, the database saves to the project directory as `activity.db`. This is useful if you want to sync your activity logs to cloud storage or keep them in a centralized location.
 
 ### 5. Update Helper Scripts (If used)

@@ -43,6 +43,9 @@ if not exist ".env" (
     echo Creating placeholder .env file...
     (
         echo GOOGLE_API_KEY=your_gemini_api_key_here
+        echo # Optional: Configure polling interval in seconds (default: 60^)
+        echo # POLL_INTERVAL_SECONDS=60
+        echo # Optional: Configure custom database location
         echo # DB_PATH=C:\path\to\custom\activity.db
     ) > .env
     echo [INFO] Please open the .env file and add your Google Gemini API key!
