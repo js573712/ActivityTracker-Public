@@ -50,7 +50,7 @@ jobs:
     - name: Test database operations
       run: |
         .\venv\Scripts\activate.ps1
-        python -c "import database; database.log_activity('Test Window - GitHub Actions'); logs = database.get_daily_logs('${{ github.event.repository.pushed_at }}'); print(f'Logged and retrieved: {len(logs)} entries')"
+        python -c "import database; from datetime import date; database.log_activity('Test Window - GitHub Actions'); logs = database.get_daily_logs(date.today().isoformat()); print(f'Logged and retrieved: {len(logs)} entries')"
         
     - name: Test custom DB_PATH support
       env:
