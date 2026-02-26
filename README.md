@@ -31,8 +31,8 @@ If you prefer setting things up manually via the command line:
 
 #### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/ActivityTracker.git
-cd ActivityTracker
+git clone https://github.com/js573712/ActivityTracker-Public.git
+cd ActivityTracker-Public
 ```
 
 #### 2. Create a Virtual Environment
