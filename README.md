@@ -87,6 +87,24 @@ You can also generate summaries for past dates by providing an ISO formatted dat
 python summarizer.py 2023-10-25
 ```
 
+## Updating
+
+To update the project with the latest code and dependencies:
+
+```bash
+# Navigate to your project directory
+cd ActivityTracker-Public
+
+# Pull the latest changes from GitHub
+git pull origin main
+
+# Update Python dependencies
+.\venv\Scripts\activate.bat
+pip install -r requirements.txt --upgrade
+```
+
+If you used the automated `install.bat` setup, you can simply re-run it to refresh the virtual environment and dependencies.
+
 ## Extensibility & Configuration
 
 The core of this application is a simple, private SQLite database. Because the raw data is completely yours, you can process the daily file with *any* AI/LLM you want.
@@ -98,6 +116,8 @@ The core of this application is a simple, private SQLite database. Because the r
 
 - **Richer Usage Information:** We need to gather more detailed usage information. For instance, using periodic screen grabs and performing OCR. While that might be token intensive to analyze, there might be other creative ways to synthesize that data.
 - **Better Activity Detection:** The current method of telling "what the user is doing" solely by reading active window titles is rather rudimentary. We need a more robust way to capture true intent without compromising privacy or performance.
+- **System Tray Application:** Convert to a Windows system tray daemon that runs silently in the background without requiring manual script execution.
+- **Auto-Update Mechanism:** Implement update checking and automated updates via git pull and dependency refresh.
 
 ## Structure
 - `logger.py` - Background logger that polls the active window title.
