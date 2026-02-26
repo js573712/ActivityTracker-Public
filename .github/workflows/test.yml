@@ -41,16 +41,16 @@ jobs:
     - name: Verify database was created
       run: |
         if (Test-Path "activity.db") {
-          Write-Host "✓ Database file created"
+          Write-Host "[PASS] Database file created"
         } else {
-          Write-Error "✗ Database file not found"
+          Write-Error "[FAIL] Database file not found"
           exit 1
         }
         
     - name: Test database operations
       run: |
         .\venv\Scripts\activate.ps1
-        python -c "import database; from datetime import date; database.log_activity('Test Window 1'); database.log_activity('Test Window 2'); logs = database.get_daily_logs(date.today().isoformat()); print(f'✓ Logged and retrieved: {len(logs)} entries')"
+        python -c "import database; from datetime import date; database.log_activity('Test Window 1'); database.log_activity('Test Window 2'); logs = database.get_daily_logs(date.today().isoformat()); print(f'[PASS] Logged and retrieved: {len(logs)} entries')"
         
     - name: Test logger.py execution
       run: |
@@ -63,12 +63,12 @@ jobs:
         Start-Sleep -Seconds 5
         Stop-Job $job
         Remove-Job $job
-        Write-Host "✓ Logger ran for 5 seconds without errors"
+        Write-Host "[PASS] Logger ran for 5 seconds without errors"
         
     - name: Add sample log entries for testing
       run: |
         .\venv\Scripts\activate.ps1
-        python -c "import database; from datetime import date; entries = ['VSCode - test.py', 'Chrome - GitHub', 'Terminal', 'VSCode - README.md']; [database.log_activity(e) for e in entries]; print(f'✓ Added {len(entries)} sample entries')"
+        python -c "import database; from datetime import date; entries = ['VSCode - test.py', 'Chrome - GitHub', 'Terminal', 'VSCode - README.md']; [database.log_activity(e) for e in entries]; print(f'[PASS] Added {len(entries)} sample entries')"
         
     - name: Test summarizer.py --raw (no API key needed)
       run: |
@@ -77,10 +77,10 @@ jobs:
         $today = Get-Date -Format "yyyy-MM-dd"
         $rawFile = "..\${today}_raw.txt"
         if (Test-Path $rawFile) {
-          Write-Host "✓ Raw export created: $rawFile"
+          Write-Host "[PASS] Raw export created: $rawFile"
           Get-Content $rawFile | Select-Object -First 3
         } else {
-          Write-Error "✗ Raw export file not found"
+          Write-Error "[FAIL] Raw export file not found"
           exit 1
         }
         
@@ -91,9 +91,9 @@ jobs:
         python summarizer.py $testDate --raw
         $rawFile = "..\${testDate}_raw.txt"
         if (Test-Path $rawFile) {
-          Write-Host "✓ Date-specific raw export works"
+          Write-Host "[PASS] Date-specific raw export works"
         } else {
-          Write-Error "✗ Date-specific export failed"
+          Write-Error "[FAIL] Date-specific export failed"
           exit 1
         }
         
@@ -104,8 +104,8 @@ jobs:
         .\venv\Scripts\activate.ps1
         python -c "import os; os.makedirs(os.path.dirname(os.environ['DB_PATH']), exist_ok=True); import database; database.init_db(); print(f'Custom DB created at: {database.DB_PATH}')"
         if (Test-Path "D:\custom_test\activity_custom.db") {
-          Write-Host "✓ Custom DB_PATH works"
+          Write-Host "[PASS] Custom DB_PATH works"
         } else {
-          Write-Error "✗ Custom DB_PATH failed"
+          Write-Error "[FAIL] Custom DB_PATH failed"
           exit 1
         }
