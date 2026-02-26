@@ -1,0 +1,66 @@
+name: Test Installation
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  test-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        
+    - name: Create virtual environment
+      run: python -m venv venv
+      
+    - name: Install dependencies
+      run: |
+        .\venv\Scripts\activate.ps1
+        pip install -r requirements.txt
+        
+    - name: Verify installation
+      run: |
+        .\venv\Scripts\activate.ps1
+        python -c "import win32gui; import sqlite3; from google import genai; from dotenv import load_dotenv; print('All imports successful')"
+        
+    - name: Test database initialization
+      run: |
+        .\venv\Scripts\activate.ps1
+        python -c "import database; database.init_db(); print('Database initialized successfully')"
+        
+    - name: Verify database was created
+      run: |
+        if (Test-Path "activity.db") {
+          Write-Host "✓ Database file created"
+        } else {
+          Write-Error "✗ Database file not found"
+          exit 1
+        }
+        
+    - name: Test database operations
+      run: |
+        .\venv\Scripts\activate.ps1
+        python -c "import database; database.log_activity('Test Window - GitHub Actions'); logs = database.get_daily_logs('${{ github.event.repository.pushed_at }}'); print(f'Logged and retrieved: {len(logs)} entries')"
+        
+    - name: Test custom DB_PATH support
+      env:
+        DB_PATH: D:\custom_test\activity_custom.db
+      run: |
+        .\venv\Scripts\activate.ps1
+        python -c "import os; os.makedirs(os.path.dirname(os.environ['DB_PATH']), exist_ok=True); import database; database.init_db(); print(f'Custom DB created at: {database.DB_PATH}')"
+        if (Test-Path "D:\custom_test\activity_custom.db") {
+          Write-Host "✓ Custom DB_PATH works"
+        } else {
+          Write-Error "✗ Custom DB_PATH failed"
+          exit 1
+        }
